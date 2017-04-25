@@ -23,14 +23,22 @@ router.get('/users/:name', (req, res) => {
 //
 // });
 
-router.post('/tweets',function (req,res) {
-  var name = req.body.name;
-  var text = req.body.text;
-  tweetBank.add(name, text);
-  io.sockets.emit('newTweet',{name:"name", content: "text"})
-  res.redirect('/');
-})
+// router.post('/tweets',function (req,res) {
+//   var name = req.body.name;
+//   var text = req.body.text;
+//   tweetBank.add(name, text);
+//   io.sockets.emit('newTweet',{name: name, content: text})
+//   res.redirect('/');
+// })
 
 module.exports = function (io) {
+  router.post('/tweets',function (req,res) {
+    var name = req.body.name;
+    var text = req.body.text;
+    tweetBank.add(name, text);
+    io.sockets.emit('newTweet',{name: name, content: text})
+    res.redirect('/');
+  })
+
   return router;
 };

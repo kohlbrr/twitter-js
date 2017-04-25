@@ -10,7 +10,7 @@ const express = require('express'),
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use('/', routes(io));
+
 app.use('/static',express.static('public'))
 app.engine('html', nunjucks.render);
 nunjucks.configure('views', { noCache: true });
@@ -47,3 +47,5 @@ app.use((req, res, next) => {
 
 var server = app.listen(8080, () => console.log('App listening on 8080!'))
 var io = socketio.listen(server);
+
+app.use('/', routes(io));
