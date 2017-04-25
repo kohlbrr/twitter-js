@@ -1,7 +1,6 @@
 const express = require('express'),
-      router = express.Router(),
-      tweetBank = require('../tweetBank'),
-      parser = require('body-parser');
+      router = express.Router(), // this sets up a new router on the express server
+      tweetBank = require('../tweetBank');
 
 router.get('/',function(req,res) {
   let tweets = tweetBank.list();
@@ -28,7 +27,10 @@ router.post('/tweets',function (req,res) {
   var name = req.body.name;
   var text = req.body.text;
   tweetBank.add(name, text);
+  io.sockets.emit('newTweet',{name:"name", content: "text"})
   res.redirect('/');
 })
 
-module.exports = router;
+module.exports = function (io) {
+  return router;
+};

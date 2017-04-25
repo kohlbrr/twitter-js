@@ -1,12 +1,16 @@
 // Require Block
 const express = require('express'),
-      app = express(),
+      bodyParser = require('body-parser')
+      app = express(), // sets up a new express server
       nunjucks = require('nunjucks'),
       routes = require('./routes'),
-      path = require('path');
+      path = require('path'),
+      socketio = require('socket.io');
 // We'll use `morgan` here if need be
 app.set('view engine', 'html');
-app.use('/', routes);
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use('/', routes(io));
 app.use('/static',express.static('public'))
 app.engine('html', nunjucks.render);
 nunjucks.configure('views', { noCache: true });
@@ -41,4 +45,5 @@ app.use((req, res, next) => {
 //   //res.status(201).send('Hi!\n');
 // })
 
-app.listen(8080, () => console.log('App listening on 8080!'))
+var server = app.listen(8080, () => console.log('App listening on 8080!'))
+var io = socketio.listen(server);
